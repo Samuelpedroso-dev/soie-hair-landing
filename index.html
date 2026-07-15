@@ -71,20 +71,15 @@
 
   /* Hero carousel */
   .hero{position:relative; height:520px; overflow:hidden;}
-  .hero-track{display:flex; height:100%; width:300%; animation:slide 12s infinite ease-in-out;}
+  .hero-track{display:flex; height:100%; width:300%; transition: transform 0.6s ease-in-out;}
   .hero-slide{width:33.3333%; height:100%; flex-shrink:0; display:flex;}
   .hero-slide .ph{flex:1;}
-  @keyframes slide{
-    0%, 28%{transform:translateX(0);}
-    36%, 64%{transform:translateX(-33.3333%);}
-    72%, 100%{transform:translateX(-66.6666%);}
-  }
   .hero-arrow{
     position:absolute; right:24px; top:50%; transform:translateY(-50%);
     width:40px; height:40px; background:#fff; border-radius:50%; z-index:5;
     display:flex; align-items:center; justify-content:center; cursor:pointer; border:none;
   }
-  @media (prefers-reduced-motion: reduce){ .hero-track{animation:none;} }
+  .hero-arrow.prev{ right:auto; left:24px; }
 
   /* New collection split */
   .new-collection{position:relative; height:480px; display:flex;}
@@ -180,13 +175,36 @@
 
 <!-- SUBSTITUA AQUI: hero — 3 slides que deslizam -->
 <section class="hero">
-  <div class="hero-track">
+  <div class="hero-track" id="heroTrack">
     <div class="hero-slide"><img src="images/hero-1.png" alt="Limited Edition Box" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="hero-slide"><img src="images/hero-2.png" alt="Invest in what transforms your future" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="hero-slide"><img src="images/hero-1.png" alt="Limited Edition Box" style="width:100%;height:100%;object-fit:cover;"></div>
   </div>
-  <button class="hero-arrow">›</button>
+  <button class="hero-arrow prev" onclick="moveHero(-1)">‹</button>
+  <button class="hero-arrow" onclick="moveHero(1)">›</button>
 </section>
+
+<script>
+  let heroIndex = 0;
+  const heroSlideCount = 3;
+  const heroTrack = document.getElementById('heroTrack');
+
+  function updateHero(){
+    heroTrack.style.transform = `translateX(-${heroIndex * (100/heroSlideCount)}%)`;
+  }
+
+  function moveHero(direction){
+    heroIndex = (heroIndex + direction + heroSlideCount) % heroSlideCount;
+    updateHero();
+    resetAutoplay();
+  }
+
+  let heroInterval = setInterval(() => moveHero(1), 5000);
+  function resetAutoplay(){
+    clearInterval(heroInterval);
+    heroInterval = setInterval(() => moveHero(1), 5000);
+  }
+</script>
 
 <!-- SUBSTITUA AQUI: bloco "new collection" -->
 <section class="new-collection">
