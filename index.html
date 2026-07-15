@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing — Estrutura de Estudo</title>
+<style>
+  :root{
+    --ph: #3a3a3a;       /* placeholder cinza escuro */
+    --ph-light:#5a5a5a;
+    --charcoal:#1c1c1c;
+    --maroon:#5c0f24;    /* cor da barra de anúncio no exemplo */
+    --line:#e5e3df;
+    --off-white:#fdfdfc;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Helvetica Neue', Arial, sans-serif; color:var(--charcoal); background:var(--off-white); font-weight:500;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1400px; margin:0 auto; padding:0 40px;}
+
+  /* placeholder block generic */
+  .ph{
+    background:var(--ph);
+    display:flex; align-items:center; justify-content:center;
+    color:#bbb; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    position:relative; overflow:hidden;
+  }
+  .ph span{position:relative; z-index:2;}
+
+  /* Announcement bar */
+  .announce{
+    background:var(--maroon); color:#fff; text-align:center;
+    font-size:12.5px; letter-spacing:.08em; padding:10px 40px;
+    position:relative;
+  }
+  .announce button{
+    position:absolute; right:16px; top:50%; transform:translateY(-50%);
+    background:none; border:none; color:#fff; font-size:16px; cursor:pointer;
+  }
+
+  /* Sticky discount tab */
+  .discount-tab{
+    position:fixed; left:0; top:55%; transform:translateY(-50%) translateX(0);
+    background:var(--charcoal); color:#fff; z-index:60;
+    writing-mode:vertical-rl; padding:22px 10px; font-size:11px;
+    letter-spacing:.14em; text-transform:uppercase; cursor:pointer;
+    display:flex; align-items:center; gap:10px;
+  }
+  .discount-tab .x{writing-mode:horizontal-tb; font-size:13px;}
+
+  /* Header */
+  header{border-bottom:1px solid var(--line); position:sticky; top:0; background:#fff; z-index:50;}
+  .nav-row{display:flex; align-items:center; justify-content:space-between; padding:18px 0; gap:20px;}
+  .logo-ph{width:110px; height:44px;}
+  nav.links{display:flex; gap:26px; font-size:12px; letter-spacing:.06em; flex-wrap:wrap;}
+  .nav-right{display:flex; align-items:center; gap:20px; font-size:12px;}
+  .currency{
+    display:flex; align-items:center; gap:6px; border:1px solid var(--line);
+    padding:6px 10px; font-size:12px; white-space:nowrap;
+  }
+  .flag-ph{width:20px; height:14px; background:var(--ph-light);}
+
+  /* Category icon row */
+  .cat-row{
+    display:flex; justify-content:space-between; padding:22px 0; border-bottom:1px solid var(--line);
+    overflow-x:auto; gap:18px;
+  }
+  .cat-item{display:flex; flex-direction:column; align-items:center; gap:8px; min-width:90px;}
+  .cat-icon{width:34px; height:34px; border-radius:50%;}
+  .cat-item span{font-size:9.5px; letter-spacing:.06em; text-align:center; text-transform:uppercase;}
+
+  /* Hero carousel */
+  .hero{position:relative; height:520px; overflow:hidden;}
+  .hero-track{display:flex; height:100%; width:300%; animation:slide 12s infinite ease-in-out;}
+  .hero-slide{width:33.3333%; height:100%; flex-shrink:0; display:flex;}
+  .hero-slide .ph{flex:1;}
+  @keyframes slide{
+    0%, 28%{transform:translateX(0);}
+    36%, 64%{transform:translateX(-33.3333%);}
+    72%, 100%{transform:translateX(-66.6666%);}
+  }
+  .hero-arrow{
+    position:absolute; right:24px; top:50%; transform:translateY(-50%);
+    width:40px; height:40px; background:#fff; border-radius:50%; z-index:5;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; border:none;
+  }
+  @media (prefers-reduced-motion: reduce){ .hero-track{animation:none;} }
+
+  /* New collection split */
+  .new-collection{position:relative; height:480px; display:flex;}
+  .nc-text{
+    width:42%; background:var(--charcoal); color:#fff;
+    display:flex; flex-direction:column; justify-content:center; padding:0 60px; gap:20px;
+  }
+  .nc-text h2{font-size:34px; letter-spacing:.02em;}
+  .nc-text p{font-size:14px; line-height:1.7; max-width:380px; color:#d8d8d8;}
+  .nc-btn{
+    background:var(--maroon); color:#fff; padding:14px 30px; font-size:12px;
+    letter-spacing:.1em; align-self:flex-start; border:none; cursor:pointer;
+  }
+  .nc-media{width:58%;}
+
+  /* Signature products */
+  section.products{padding:80px 0;}
+  .products-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:50px;}
+  .products-head h2{font-size:26px; letter-spacing:.04em;}
+  .grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:36px;}
+  .prod-card .ph{aspect-ratio:3/5; margin-bottom:18px;}
+  .prod-card h3{font-size:12.5px; letter-spacing:.03em; margin-bottom:6px; text-transform:uppercase;}
+  .prod-card .price{font-size:13px; color:#555;}
+
+  /* Art of hair couture split */
+  .art-section{padding:90px 0 0; text-align:center;}
+  .art-section h2{font-size:32px; letter-spacing:.03em; margin-bottom:16px;}
+  .art-section p{font-size:13.5px; color:#555; max-width:560px; margin:0 auto 50px;}
+  .art-split{display:flex; height:420px;}
+  .art-split .ph{flex:1;}
+
+  footer{padding:60px 0; text-align:center; font-size:12px; color:#888; border-top:1px solid var(--line); margin-top:60px;}
+
+  @media (max-width:900px){
+    nav.links{display:none;}
+    .grid-4{grid-template-columns:repeat(2,1fr);}
+    .new-collection{flex-direction:column; height:auto;}
+    .nc-text, .nc-media{width:100%;}
+    .nc-media{height:320px;}
+    .art-split{flex-direction:column; height:auto;}
+    .art-split .ph{height:280px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="announce">
+  FREE DELIVERY ON ALL ORDERS FOR A LIMITED TIME
+  <button aria-label="fechar">×</button>
+</div>
+
+<div class="discount-tab">
+  UNLOCK YOUR DISCOUNT
+</div>
+
+<header>
+  <div class="wrap nav-row">
+    <!-- SUBSTITUA AQUI: logo -->
+    <div class="ph logo-ph"><span>logo</span></div>
+    <nav class="links">
+      <a href="#">NEW COLLECTION</a>
+      <a href="#">LIMITED EDITIONS</a>
+      <a href="#">CARE</a>
+      <a href="#">STYLING</a>
+      <a href="#">TOOLS</a>
+      <a href="#">ACCESSORIES</a>
+      <a href="#">HOMME</a>
+      <a href="#">TRAVEL SETS</a>
+    </nav>
+    <div class="nav-right">
+      <span>🔍</span>
+      <span>👤</span>
+      <div class="currency">
+        <div class="flag-ph"></div>
+        <span>USD ›</span>
+      </div>
+      <span>🛍 0</span>
+    </div>
+  </div>
+
+  <div class="wrap cat-row">
+    <!-- SUBSTITUA AQUI: ícones de categoria (9x) -->
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Normal to Dry</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Dry & Damaged</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Color Protection</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Curl Care</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Blonde Maintenance</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Frizz Control</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Volume & Fine Hair</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Hair Loss & Scalp</span></div>
+    <div class="cat-item"><div class="ph cat-icon"></div><span>Heat Protection</span></div>
+  </div>
+</header>
+
+<!-- SUBSTITUA AQUI: hero — 3 slides que deslizam -->
+<section class="hero">
+  <div class="hero-track">
+    <div class="hero-slide"><div class="ph"><span>imagem hero 1</span></div></div>
+    <div class="hero-slide"><div class="ph"><span>imagem hero 2</span></div></div>
+    <div class="hero-slide"><div class="ph"><span>imagem hero 3</span></div></div>
+  </div>
+  <button class="hero-arrow">›</button>
+</section>
+
+<!-- SUBSTITUA AQUI: bloco "new collection" -->
+<section class="new-collection">
+  <div class="nc-text">
+    <h2>NEW COLLECTION</h2>
+    <p>Featuring limited-edition styling essentials and care formulas designed to deliver shine, strength, and unmistakable luxury.</p>
+    <button class="nc-btn">SHOP NOW</button>
+  </div>
+  <div class="ph nc-media"><span>imagem editorial</span></div>
+</section>
+
+<section class="products wrap">
+  <div class="products-head">
+    <h2>SIGNATURE PRODUCTS</h2>
+    <div class="currency">
+      <div class="flag-ph"></div>
+      <span>USD ›</span>
+    </div>
+  </div>
+  <div class="grid-4">
+    <!-- SUBSTITUA AQUI: foto do produto 1-4 -->
+    <div class="prod-card">
+      <div class="ph"><span>produto 1</span></div>
+      <h3>Nome do Produto</h3>
+      <span class="price">$196 USD</span>
+    </div>
+    <div class="prod-card">
+      <div class="ph"><span>produto 2</span></div>
+      <h3>Nome do Produto</h3>
+      <span class="price">$196 USD</span>
+    </div>
+    <div class="prod-card">
+      <div class="ph"><span>produto 3</span></div>
+      <h3>Nome do Produto</h3>
+      <span class="price">$196 USD</span>
+    </div>
+    <div class="prod-card">
+      <div class="ph"><span>produto 4</span></div>
+      <h3>Nome do Produto</h3>
+      <span class="price">$196 USD</span>
+    </div>
+  </div>
+</section>
+
+<section class="art-section wrap">
+  <h2>THE ART OF HAIR COUTURE</h2>
+  <p>SLEEK, GLOSSY, FRAGRANT HAIR THAT LASTS — LUXURY HAIRCARE POWERED BY EXPERTISE.</p>
+  <!-- SUBSTITUA AQUI: 2 imagens lado a lado -->
+  <div class="art-split">
+    <div class="ph"><span>imagem esquerda</span></div>
+    <div class="ph"><span>imagem direita</span></div>
+  </div>
+</section>
+
+<footer>
+  © 2026 — Projeto de estudo. Substitua os retângulos cinza pelas suas próprias imagens.
+</footer>
+
+</body>
+</html>
