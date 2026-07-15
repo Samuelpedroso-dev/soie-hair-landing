@@ -50,14 +50,12 @@
 
   /* Header — fixo, vidro fosco permanente */
   header{
-    border-bottom:1px solid rgba(255,255,255,0.15);
+    border-bottom:1px solid transparent;
     position:fixed; top:40px; left:0; right:0; z-index:50;
-    background:rgba(20,20,20,0.35);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background:transparent;
     color:#fff;
   }
-  header a{ color:#fff; }
+  header a{ color:#fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
   header .currency{ border-color:rgba(255,255,255,0.4); }
   header .flag-ph{ background:rgba(255,255,255,0.3); }
   .nav-row{display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:20px;}
@@ -147,6 +145,44 @@
   .prod-card .ph{aspect-ratio:3/5; margin-bottom:18px; transition: transform 0.6s ease;}
   .prod-card:hover .ph{ transform: scale(1.03); }
   .prod-card h3{font-size:12.5px; letter-spacing:.03em; margin-bottom:6px; text-transform:uppercase;}
+  .add-cart-btn{
+    display:block; width:100%; margin-top:12px; padding:10px 0;
+    background:var(--charcoal); color:#fff; border:none; font-size:11px;
+    letter-spacing:.08em; cursor:pointer; opacity:0; transform:translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+  }
+  .prod-card:hover .add-cart-btn{ opacity:1; transform:translateY(0); }
+  .add-cart-btn:hover{ background:var(--maroon); }
+
+  /* Search box */
+  .search-box{
+    max-height:0; overflow:hidden; transition: max-height 0.35s ease, padding 0.35s ease;
+    background:rgba(255,255,255,0.95);
+  }
+  .search-box.open{ max-height:70px; padding:14px 40px; }
+  .search-box input{
+    width:100%; max-width:1320px; margin:0 auto; display:block;
+    padding:10px 14px; border:1px solid var(--line); font-size:13px; color:var(--charcoal);
+  }
+
+  /* Drawers (cart / profile) */
+  .drawer{
+    position:fixed; top:0; right:-380px; width:360px; height:100%;
+    background:#fff; z-index:100; box-shadow:-4px 0 20px rgba(0,0,0,0.15);
+    transition: right 0.4s ease; padding:24px; color:var(--charcoal);
+  }
+  .drawer.open{ right:0; }
+  .drawer-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+  .drawer-head button{ background:none; border:none; font-size:20px; cursor:pointer; }
+  .drawer-items{ display:flex; flex-direction:column; gap:14px; font-size:13px; }
+  .drawer-link{ padding:10px 0; border-bottom:1px solid var(--line); color:var(--charcoal); }
+  .empty-msg{ color:#888; font-size:13px; }
+  .cart-item{ display:flex; justify-content:space-between; font-size:13px; padding-bottom:10px; border-bottom:1px solid var(--line); }
+  .drawer-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:90;
+    opacity:0; pointer-events:none; transition: opacity 0.3s ease;
+  }
+  .drawer-overlay.open{ opacity:1; pointer-events:auto; }
   .prod-card .price{font-size:13px; color:#555;}
 
   /* Art of hair couture split */
@@ -190,12 +226,12 @@
 </head>
 <body>
 
-<div class="announce">
+<div class="announce" id="announceBar">
   FREE DELIVERY ON ALL ORDERS FOR A LIMITED TIME
-  <button aria-label="fechar">×</button>
+  <button aria-label="fechar" onclick="closeAnnounce()">×</button>
 </div>
 
-<div class="discount-tab">
+<div class="discount-tab" onclick="openDiscount()">
   UNLOCK YOUR DISCOUNT
 </div>
 
@@ -213,23 +249,50 @@
       <a href="#">TRAVEL SETS</a>
     </nav>
     <div class="nav-right">
-      <div class="lang-select">
-        <span>English</span> <span>⌄</span>
+      <div class="lang-select" id="langSelect" onclick="toggleLang()">
+        <span id="langLabel">English</span> <span>⌄</span>
       </div>
-      <div class="icon-btn">🔍</div>
-      <div class="icon-btn">👤</div>
-      <div class="icon-btn cart-btn">
+      <div class="icon-btn" onclick="toggleSearch()">🔍</div>
+      <div class="icon-btn" onclick="toggleProfile()">👤</div>
+      <div class="icon-btn cart-btn" onclick="toggleCart()">
         🛍
-        <span class="cart-count">0</span>
+        <span class="cart-count" id="cartCount">0</span>
       </div>
-      <div class="currency">
+      <div class="currency" onclick="toggleCurrency()">
         <div class="flag-ph"></div>
-        <span>USD ›</span>
+        <span id="currencyLabel">USD ›</span>
       </div>
     </div>
   </div>
 
+  <div id="searchBox" class="search-box">
+    <input type="text" placeholder="Buscar produtos..." />
+  </div>
 </header>
+
+<div id="cartDrawer" class="drawer">
+  <div class="drawer-head">
+    <h3>Seu carrinho</h3>
+    <button onclick="toggleCart()">×</button>
+  </div>
+  <div id="cartItems" class="drawer-items">
+    <p class="empty-msg">Seu carrinho está vazio.</p>
+  </div>
+</div>
+
+<div id="drawerOverlay" class="drawer-overlay" onclick="closeAllDrawers()"></div>
+
+<div id="profileDrawer" class="drawer">
+  <div class="drawer-head">
+    <h3>Minha conta</h3>
+    <button onclick="toggleProfile()">×</button>
+  </div>
+  <div class="drawer-items">
+    <a href="#" class="drawer-link">Entrar</a>
+    <a href="#" class="drawer-link">Criar conta</a>
+    <a href="#" class="drawer-link">Meus pedidos</a>
+  </div>
+</div>
 
 <!-- SUBSTITUA AQUI: hero — 3 slides que deslizam -->
 <section class="hero">
@@ -286,6 +349,79 @@
     });
   }, { threshold: 0.15 });
   revealEls.forEach(el => revealObserver.observe(el));
+
+  // Announce bar
+  function closeAnnounce(){
+    document.getElementById('announceBar').style.display = 'none';
+  }
+
+  // Discount tab
+  function openDiscount(){
+    alert('🎉 Use o cupom SOIE10 para 10% de desconto na primeira compra!');
+  }
+
+  // Search box
+  function toggleSearch(){
+    document.getElementById('searchBox').classList.toggle('open');
+  }
+
+  // Cart drawer
+  let cart = [];
+  function toggleCart(){
+    closeOtherDrawers('cartDrawer');
+    document.getElementById('cartDrawer').classList.toggle('open');
+    document.getElementById('drawerOverlay').classList.toggle('open');
+  }
+
+  function addToCart(name, price){
+    cart.push({ name, price });
+    updateCartUI();
+    document.getElementById('cartDrawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+  }
+
+  function updateCartUI(){
+    document.getElementById('cartCount').textContent = cart.length;
+    const itemsEl = document.getElementById('cartItems');
+    if(cart.length === 0){
+      itemsEl.innerHTML = '<p class="empty-msg">Seu carrinho está vazio.</p>';
+      return;
+    }
+    itemsEl.innerHTML = cart.map(item =>
+      `<div class="cart-item"><span>${item.name}</span><span>$${item.price} USD</span></div>`
+    ).join('');
+  }
+
+  // Profile drawer
+  function toggleProfile(){
+    closeOtherDrawers('profileDrawer');
+    document.getElementById('profileDrawer').classList.toggle('open');
+    document.getElementById('drawerOverlay').classList.toggle('open');
+  }
+
+  function closeOtherDrawers(exceptId){
+    ['cartDrawer','profileDrawer'].forEach(id => {
+      if(id !== exceptId) document.getElementById(id).classList.remove('open');
+    });
+  }
+
+  function closeAllDrawers(){
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('profileDrawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+  }
+
+  // Language toggle (EN / PT)
+  function toggleLang(){
+    const label = document.getElementById('langLabel');
+    label.textContent = label.textContent === 'English' ? 'Português' : 'English';
+  }
+
+  // Currency toggle (USD / BRL)
+  function toggleCurrency(){
+    const label = document.getElementById('currencyLabel');
+    label.textContent = label.textContent.startsWith('USD') ? 'BRL ›' : 'USD ›';
+  }
 </script>
 
 <!-- SUBSTITUA AQUI: bloco "new collection" -->
@@ -293,12 +429,12 @@
   <div class="nc-text">
     <h2>NEW COLLECTION</h2>
     <p>Featuring limited-edition styling essentials and care formulas designed to deliver shine, strength, and unmistakable luxury.</p>
-    <button class="nc-btn">SHOP NOW</button>
+    <button class="nc-btn" onclick="document.getElementById('productsSection').scrollIntoView({behavior:'smooth'})">SHOP NOW</button>
   </div>
   <div class="nc-media"><img src="images/hero-2.png" alt="New Collection" style="width:100%;height:100%;object-fit:cover;"></div>
 </section>
 
-<section class="products wrap reveal hover-line">
+<section class="products wrap reveal hover-line" id="productsSection">
   <div class="products-head">
     <h2>SIGNATURE PRODUCTS</h2>
     <div class="currency">
@@ -312,21 +448,25 @@
       <div class="ph"><span>produto 1</span></div>
       <h3>Nome do Produto</h3>
       <span class="price">$196 USD</span>
+      <button class="add-cart-btn" onclick="addToCart('Nome do Produto 1', 196)">ADICIONAR AO CARRINHO</button>
     </div>
     <div class="prod-card">
       <div class="ph"><span>produto 2</span></div>
       <h3>Nome do Produto</h3>
       <span class="price">$196 USD</span>
+      <button class="add-cart-btn" onclick="addToCart('Nome do Produto 2', 196)">ADICIONAR AO CARRINHO</button>
     </div>
     <div class="prod-card">
       <div class="ph"><span>produto 3</span></div>
       <h3>Nome do Produto</h3>
       <span class="price">$196 USD</span>
+      <button class="add-cart-btn" onclick="addToCart('Nome do Produto 3', 196)">ADICIONAR AO CARRINHO</button>
     </div>
     <div class="prod-card">
       <div class="ph"><span>produto 4</span></div>
       <h3>Nome do Produto</h3>
       <span class="price">$196 USD</span>
+      <button class="add-cart-btn" onclick="addToCart('Nome do Produto 4', 196)">ADICIONAR AO CARRINHO</button>
     </div>
   </div>
 </section>
